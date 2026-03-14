@@ -16,6 +16,12 @@ export default function Dashboard() {
   const [resendStatus, setResendStatus] = useState('');
 
   useEffect(() => {
+    // If there is a pending invite in local storage, route them to accept it first
+    if (localStorage.getItem('pending_invite_token')) {
+      window.location.href = '/projects/join';
+      return;
+    }
+
     const fetchProjects = async () => {
       try {
         const data = await projectsService.getProjects();
