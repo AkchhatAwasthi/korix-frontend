@@ -13,13 +13,17 @@ export default function ProjectDetails() {
   const [loading, setLoading] = useState(true);
   const [addingSubProject, setAddingSubProject] = useState(false);
   const [addingMember, setAddingMember] = useState(false);
+  const [selfRole, setSelfRole] = useState<string | null>(null);
 
   useEffect(() => {
     if (!projectId) return;
     const fetchData = async () => {
       try {
         const projData = await projectsService.getProjectById(projectId);
-        setProject(projData);
+        setProject(projData.project || projData);
+
+        const roleData = await projectsService.getSelfRole(projectId);
+        setSelfRole(roleData.role);
 
         const subData = await projectsService.getSubProjects(projectId);
         setSubProjects(subData.subProjects || []);
@@ -59,7 +63,7 @@ export default function ProjectDetails() {
     setAddingMember(true);
     try {
       await projectsService.addMember(projectId, { email, role });
-      alert('Member added successfully!');
+      alert('Invitation sent successfully!');
     } catch (err: any) {
       alert(err.response?.data?.message || 'Failed to add member');
     } finally {
@@ -87,12 +91,16 @@ export default function ProjectDetails() {
                   <p style={{ color: 'var(--text-secondary)', marginTop: '0.5rem' }}>{project.description || 'No description'}</p>
                 </div>
                 <div style={{ display: 'flex', gap: '1rem' }}>
-                  <button className="btn btn-outline" onClick={handleAddMember} disabled={addingMember}>
-                    <UserPlus size={16} /> <span>{addingMember ? 'Adding...' : 'Add Member'}</span>
-                  </button>
-                  <button className="btn btn-accent" onClick={handleCreateSubProject} disabled={addingSubProject}>
-                    <Plus size={16} /> <span>{addingSubProject ? 'Creating...' : 'New Sub-Project'}</span>
-                  </button>
+                  {selfRole === 'ADMIN' && (
+                    <button className="btn btn-outline" onClick={handleAddMember} disabled={addingMember}>
+                      <UserPlus size={16} /> <span>{addingMember ? 'Adding...' : 'Add Member'}</span>
+                    </button>
+                  )}
+                  {selfRole === 'ADMIN' && (
+                    <button className="btn btn-accent" onClick={handleCreateSubProject} disabled={addingSubProject}>
+                      <Plus size={16} /> <span>{addingSubProject ? 'Creating...' : 'New Sub-Project'}</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -128,16 +136,35 @@ export default function ProjectDetails() {
                   </div>
                 </section>
 
-                {/* Team Members Snapshot (Optional implementation depending on backend) */}
+                {/* Team Members Snapshot */}
                 <section className="card section-card">
                   <div className="section-header">
                     <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Users size={20} /> Members
                     </h3>
                   </div>
-                  <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                    Project tracking is live. Add new team members to start assigning tasks. (Member list fetching can be added here)
-                  </p>
+                  <div className="projects-list">
+                    {project.members && project.members.length > 0 ? (
+                      project.members.map((member: any) => (
+                        <div key={member.id} className="project-item">
+                          <div className="project-info">
+                            <h4 className="project-name" style={{ margin: 0 }}>{member.user.name || 'Unknown User'}</h4>
+                            <span className="status-badge status-in-progress" style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem' }}>
+                              {member.role}
+                            </span>
+                          </div>
+                          <div className="project-meta">
+                            <span className="meta-text">{member.user.email}</span>
+                            <span className="meta-text">Joined {new Date(member.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                        No members found. Add new team members to collaborate.
+                      </p>
+                    )}
+                  </div>
                 </section>
               </div>
             </>

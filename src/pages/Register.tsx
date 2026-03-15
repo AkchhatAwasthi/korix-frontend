@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Sparkles, UserPlus } from 'lucide-react';
 import { authService } from '../api/auth';
 import './Login.css'; // Re-use the flawless login styles
@@ -12,6 +12,14 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
+
+  React.useEffect(() => {
+    if (token) {
+      localStorage.setItem('pending_invite_token', token);
+    }
+  }, [token]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -6,7 +6,8 @@ import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
 import VerifyEmail from './pages/VerifyEmail';
 import ProjectDetails from './pages/ProjectDetails';
-import './App.css'; // Optional local styles
+import JoinProject from './pages/JoinProject';
+import './App.css'; 
 
 const ProtectedRoute = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -24,6 +25,7 @@ function AppRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/projects/join" element={<JoinProject />} />
       
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />

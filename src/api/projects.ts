@@ -25,9 +25,15 @@ export const projectsService = {
     return response.data;
   },
 
-  // Add members (requires Admin role)
+  // Add members via email invitation (requires Admin role)
   addMember: async (projectId: string, data: { email: string; role: 'ADMIN' | 'MEMBER' | 'VIEWER' }) => {
     const response = await api.post(`/projects/${projectId}/members`, data);
+    return response.data;
+  },
+
+  // Accept a project invitation
+  acceptInvite: async (token: string) => {
+    const response = await api.post(`/projects/invites/accept`, { token });
     return response.data;
   },
 
