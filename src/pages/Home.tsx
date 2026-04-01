@@ -10,7 +10,7 @@ export default function Home() {
       <header className="home-header">
         <div className="home-brand">
           <Sparkles size={24} color="var(--accent-blue)" />
-          <span className="brand-text">Korix <span className="text-gradient">AI</span></span>
+          <span className="brand-text">Korix</span>
         </div>
         <nav className="home-nav">
           <Link to="/login" className="nav-link">Sign In</Link>
@@ -64,7 +64,7 @@ export default function Home() {
       
       {/* Footer */}
       <footer className="home-footer">
-        <p>© {new Date().getFullYear()} Korix AI. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Korix. All rights reserved.</p>
       </footer>
     </div>
   );

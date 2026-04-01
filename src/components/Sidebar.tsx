@@ -23,7 +23,7 @@ export default function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-header">
         <Sparkles size={24} className="brand-icon" />
-        <span className="brand-text">Korix <span className="text-gradient">AI</span></span>
+        <span className="brand-text">Korix</span>
       </div>
 
       <div className="workspace-selector">
@@ -39,7 +39,7 @@ export default function Sidebar() {
             <li key={idx} className="nav-item">
               <NavLink 
                 to={item.path} 
-                className={({ isActive }) => `nav-link ${isActive || (isActive && item.path === '/dashboard') ? 'active' : ''}`}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
               >
                 {item.icon}
                 <span>{item.label}</span>
@@ -52,10 +52,10 @@ export default function Sidebar() {
 
         <ul className="nav-list">
           <li className="nav-item">
-            <a href="#" className="nav-link">
+            <NavLink to="/settings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
               <Settings size={20} />
               <span>Settings</span>
-            </a>
+            </NavLink>
           </li>
         </ul>
       </nav>

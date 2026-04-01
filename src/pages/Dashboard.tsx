@@ -138,7 +138,7 @@ export default function Dashboard() {
                 <div className="activity-item">
                   <div className="activity-dot"></div>
                   <div className="activity-content">
-                    <p>Welcome to <strong>Korix AI</strong>!</p>
+                    <p>Welcome to <strong>Korix</strong>!</p>
                     <span className="activity-time">Just now</span>
                   </div>
                 </div>

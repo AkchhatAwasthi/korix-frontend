@@ -7,6 +7,10 @@ import Home from './pages/Home';
 import VerifyEmail from './pages/VerifyEmail';
 import ProjectDetails from './pages/ProjectDetails';
 import JoinProject from './pages/JoinProject';
+import ProjectsPage from './pages/Projects';
+import TasksPage from './pages/Tasks';
+import TeamPage from './pages/Team';
+import SettingsPage from './pages/Settings';
 import './App.css'; 
 
 const ProtectedRoute = () => {
@@ -29,8 +33,11 @@ function AppRoutes() {
       
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/:projectId" element={<ProjectDetails />} />
-        {/* We will route other protected things here later */}
+        <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Route>
       
       {/* Catch all to home */}

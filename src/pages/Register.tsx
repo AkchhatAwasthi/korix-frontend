@@ -46,7 +46,7 @@ export default function RegisterPage() {
           <div className="brand-logo">
             <Sparkles size={28} color="var(--accent-blue)" />
           </div>
-          <h2 className="brand-name">Join Korix <span className="text-gradient">AI</span></h2>
+          <h2 className="brand-name">Join Korix</h2>
           <p className="brand-subtitle">Create your orchestrator workspace.</p>
         </div>
 

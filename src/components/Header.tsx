@@ -3,7 +3,12 @@ import { Bell, Search, Plus } from 'lucide-react';
 import { projectsService } from '../api/projects';
 import './Header.css';
 
-export default function Header() {
+interface HeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export default function Header({ title = 'Dashboard', subtitle }: HeaderProps) {
   const [loading, setLoading] = useState(false);
 
   const handleNewProject = async () => {
@@ -26,7 +31,14 @@ export default function Header() {
   return (
     <header className="top-header">
       <div className="header-left">
-        <h2 className="page-title">Dashboard</h2>
+        <div>
+          <h2 className="page-title">{title}</h2>
+          {subtitle && (
+            <p style={{ margin: '0.35rem 0 0', color: 'var(--text-secondary)', fontSize: '0.95rem' }}>
+              {subtitle}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="header-right">

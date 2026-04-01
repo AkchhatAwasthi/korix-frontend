@@ -39,7 +39,7 @@ export default function VerifyEmail() {
           <div className="brand-logo">
             <Sparkles size={28} color="var(--accent-blue)" />
           </div>
-          <h2 className="brand-name">Korix <span className="text-gradient">AI</span></h2>
+          <h2 className="brand-name">Korix</h2>
         </div>
 
         <div className="card login-card" style={{ textAlign: 'center', padding: '3rem 2rem' }}>

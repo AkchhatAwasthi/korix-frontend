@@ -41,7 +41,7 @@ export default function LoginPage() {
           <div className="brand-logo">
             <Sparkles size={28} color="var(--accent-blue)" />
           </div>
-          <h2 className="brand-name">Korix <span className="text-gradient">AI</span></h2>
+          <h2 className="brand-name">Korix</h2>
           <p className="brand-subtitle">Sign in to orchestrate your projects.</p>
         </div>
 
