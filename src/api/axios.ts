@@ -22,8 +22,11 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const requestUrl = originalRequest?.url as string | undefined;
+    const isRefreshRequest = typeof requestUrl === 'string' && requestUrl.includes('/auth/refresh');
+
     // If it's a 401 Unauthorized and we haven't already retried this exact request
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (error.response?.status === 401 && originalRequest && !originalRequest._retry && !isRefreshRequest) {
       originalRequest._retry = true;
       try {
         // Attempt to hit the refresh endpoint (this will automatically send the refresh_token cookie)
@@ -40,7 +43,6 @@ api.interceptors.response.use(
         // Refresh token died / is missing: time to logout!
         localStorage.removeItem('access_token');
         localStorage.removeItem('korix_user');
-        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
