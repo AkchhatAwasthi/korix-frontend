@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { usePageLoading } from '../context/LoadingContext';
 import { authService } from '../api/auth';
 import './Login.css';
 
@@ -12,10 +13,12 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { loginState } = useAuth();
+  const { start, done } = usePageLoading();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    start();
     setError('');
 
     try {
@@ -31,6 +34,7 @@ export default function LoginPage() {
       );
     } finally {
       setLoading(false);
+      done();
     }
   };
 
@@ -38,9 +42,7 @@ export default function LoginPage() {
     <div className="auth-layout">
       <div className="login-card-container">
         <div className="login-brand">
-          <div className="brand-logo">
-            <Sparkles size={28} color="var(--accent-blue)" />
-          </div>
+          <div className="auth-logo">K</div>
           <h2 className="brand-name">Korix</h2>
           <p className="brand-subtitle">Sign in to orchestrate your projects.</p>
         </div>

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Sparkles, UserPlus } from 'lucide-react';
+import { usePageLoading } from '../context/LoadingContext';
+import { useAuth } from '../context/AuthContext';
 import { authService } from '../api/auth';
 import './Login.css'; // Re-use the flawless login styles
 
@@ -14,6 +16,8 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
+  const { start, done } = usePageLoading();
+  const { loginState } = useAuth();
 
   React.useEffect(() => {
     if (token) {
@@ -24,18 +28,23 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    start();
     setError('');
     
     try {
-      await authService.register({ name, email, password });
+      const res = await authService.register({ name, email, password });
       
-      setSuccess('Account created! Redirecting to login...');
-      setTimeout(() => navigate('/login'), 2000);
+      // Auto-login logic
+      localStorage.setItem('access_token', res.accessToken);
+      loginState(res.user);
+      
+      navigate('/dashboard');
       
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'An error occurred during registration.');
     } finally {
       setLoading(false);
+      done();
     }
   };
 
@@ -43,9 +52,7 @@ export default function RegisterPage() {
     <div className="auth-layout">
       <div className="login-card-container">
         <div className="login-brand">
-          <div className="brand-logo">
-            <Sparkles size={28} color="var(--accent-blue)" />
-          </div>
+          <div className="auth-logo">K</div>
           <h2 className="brand-name">Join Korix</h2>
           <p className="brand-subtitle">Create your orchestrator workspace.</p>
         </div>
@@ -96,7 +103,7 @@ export default function RegisterPage() {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary login-btn" disabled={loading}>
+            <button type="submit" className="btn btn-accent login-btn" disabled={loading}>
               {loading ? 'Creating Account...' : 'Sign Up'}
               {!loading && <UserPlus size={16} />}
             </button>

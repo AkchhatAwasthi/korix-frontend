@@ -2,99 +2,132 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { CheckSquare } from 'lucide-react';
+import { CheckSquare, Circle, Clock, AlertTriangle, CheckCircle2, User, Calendar } from 'lucide-react';
 import { projectsService } from '../api/projects';
 import { tasksService, type TaskItem } from '../api/tasks';
-import './Dashboard.css';
+import './Tasks.css';
 
-type TaskWithProject = TaskItem & {
-  projectName: string;
+type TaskWithProject = TaskItem & { projectName: string };
+
+const STATUS_CONFIG: Record<string, { label: string; color: string; icon: React.ReactNode }> = {
+  TODO:        { label: 'To Do',      color: 'var(--text-tertiary)',  icon: <Circle size={14} /> },
+  IN_PROGRESS: { label: 'In Progress',color: 'var(--accent-blue)',    icon: <Clock size={14} /> },
+  IN_REVIEW:   { label: 'In Review',  color: 'var(--accent-amber)',   icon: <AlertTriangle size={14} /> },
+  DONE:        { label: 'Done',       color: 'var(--accent-green)',   icon: <CheckCircle2 size={14} /> },
 };
 
-type ProjectSummary = {
-  id: string;
-  name: string;
+const PRIORITY_CONFIG: Record<string, { color: string }> = {
+  URGENT: { color: 'var(--accent-red)' },
+  HIGH:   { color: 'var(--accent-amber)' },
+  MEDIUM: { color: '#A5B4FC' },
+  LOW:    { color: 'var(--text-tertiary)' },
 };
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState<TaskWithProject[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<string>('ALL');
 
   useEffect(() => {
-    const loadTasks = async () => {
+    const load = async () => {
       try {
-        const projectData = await projectsService.getProjects();
-        const projects: ProjectSummary[] = projectData.projects || [];
-
-        const taskGroups = await Promise.all(
-          projects.map(async (project) => {
-            const taskData = await tasksService.getTasks(project.id);
-            return (taskData.tasks || []).map((task) => ({
-              ...task,
-              projectName: project.name,
-            }));
+        const pd = await projectsService.getProjects();
+        const projects = pd.projects || [];
+        const groups = await Promise.all(
+          projects.map(async (p: any) => {
+            const td = await tasksService.getTasks(p.id);
+            return (td.tasks || []).map((t: TaskItem) => ({ ...t, projectName: p.name }));
           })
         );
-
-        setTasks(taskGroups.flat());
-      } catch (error) {
-        console.error('Failed to load tasks', error);
+        setTasks(groups.flat());
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
     };
-
-    loadTasks();
+    load();
   }, []);
+
+  const filtered = filter === 'ALL' ? tasks : tasks.filter(t => t.status === filter);
+  const statuses = ['ALL', 'TODO', 'IN_PROGRESS', 'IN_REVIEW', 'DONE'];
 
   return (
     <div className="app-layout">
       <Sidebar />
       <div className="main-content">
-        <Header title="Tasks" subtitle="A cross-project view of what is assigned, active, and due next." />
+        <Header />
 
-        <div className="page-container dashboard-container">
-          <section className="card section-card">
-            <div className="section-header">
-              <h3 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckSquare size={20} /> All Tasks
-              </h3>
+        <div className="tasks-container">
+          <div className="tasks-card">
+            <div className="tasks-header">
+              <h3 className="tasks-title"><CheckSquare size={18} /> All Tasks ({filtered.length})</h3>
             </div>
 
-            <div className="projects-list">
+            {/* Filter tabs */}
+            <div className="tasks-tabs">
+              {statuses.map(s => (
+                <button 
+                  key={s} 
+                  className={`tasks-tab ${filter === s ? 'active' : ''}`} 
+                  onClick={() => setFilter(s)}
+                >
+                  {s === 'ALL' ? 'All Tasks' : STATUS_CONFIG[s]?.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="tasks-list">
               {loading ? (
-                <p>Loading tasks...</p>
-              ) : tasks.length === 0 ? (
-                <p>No tasks yet. Open a project and assign the first task from there.</p>
+                <div className="tasks-empty">Gathering your tasks…</div>
+              ) : filtered.length === 0 ? (
+                <div className="tasks-empty">No tasks found. Take a break!</div>
               ) : (
-                tasks.map((task) => (
-                  <div key={task.id} className="project-item">
-                    <div className="project-info" style={{ alignItems: 'flex-start' }}>
-                      <div>
-                        <h4 className="project-name" style={{ marginBottom: '0.35rem' }}>{task.title}</h4>
-                        <p style={{ margin: 0, color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-                          {task.description || 'No description'}
-                        </p>
+                filtered.map(task => {
+                  const sc = STATUS_CONFIG[task.status];
+                  const pc = PRIORITY_CONFIG[task.priority];
+                  return (
+                    <div key={task.id} className="global-task-item">
+                      
+                      {/* Top Row: Title & Priority */}
+                      <div className="global-task-top">
+                        <span style={{ color: sc?.color }}>{sc?.icon}</span>
+                        <span className="global-task-title">{task.title}</span>
+                        <span className="global-task-priority" style={{ color: pc?.color }}>
+                          {task.priority}
+                        </span>
                       </div>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
-                        <span className="status-badge status-in-progress">{task.priority}</span>
-                        <span className="status-badge status-planning">{task.status.replaceAll('_', ' ')}</span>
-                      </div>
-                    </div>
-                    <div className="project-meta" style={{ flexDirection: 'column', alignItems: 'flex-end', gap: '0.35rem' }}>
-                      <span className="meta-text">
-                        <Link to={`/projects/${task.projectId}`} style={{ color: 'var(--accent-blue)', textDecoration: 'none' }}>
+
+                      {/* Description */}
+                      {task.description && (
+                        <p className="global-task-desc">{task.description}</p>
+                      )}
+
+                      {/* Meta Bottom Row */}
+                      <div className="global-task-meta">
+                        <Link to={`/projects/${task.projectId}`} className="global-task-project">
                           {task.projectName}
                         </Link>
-                      </span>
-                      <span className="meta-text">Assignee: {task.assignee?.name || task.assignee?.email || 'Unassigned'}</span>
-                      <span className="meta-text">Due: {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'No due date'}</span>
+                        
+                        <div className="global-task-info">
+                          <User size={12} />
+                          <span>{task.assignee?.name || task.assignee?.email || 'Unassigned'}</span>
+                        </div>
+                        
+                        {task.dueDate && (
+                          <div className="global-task-info">
+                            <Calendar size={12} />
+                            <span>{new Date(task.dueDate).toLocaleDateString()}</span>
+                          </div>
+                        )}
+                      </div>
+
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
-          </section>
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Send } from 'lucide-react';
 
 interface Props {
   onSend: (content: string) => void;
@@ -26,7 +27,7 @@ export default function ChatInput({ onSend, disabled }: Props) {
     <div className="chat-input-bar">
       <textarea
         className="chat-textarea"
-        placeholder="Type a message… (Enter to send, Shift+Enter for new line)"
+        placeholder="Type a message…"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -38,7 +39,7 @@ export default function ChatInput({ onSend, disabled }: Props) {
         onClick={handleSend}
         disabled={disabled || !value.trim()}
       >
-        Send
+        <Send size={18} />
       </button>
     </div>
   );

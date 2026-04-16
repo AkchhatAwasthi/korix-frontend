@@ -1,12 +1,23 @@
+/* ── Auth Layout (Jira SaaS format) ──────────────────────────────────────── */
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg);
+}
+
+/* ── Auth Card Container ─────────────────────────────────────────────────── */
 .login-card-container {
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 0 1.5rem;
+  padding: 2rem 1rem;
 }
 
+/* ── Brand Header ─────────────────────────────────────────────────────────── */
 .login-brand {
   text-align: center;
   display: flex;
@@ -15,19 +26,26 @@
   gap: 0.75rem;
 }
 
-.brand-logo {
-  background-color: var(--color-white);
-  padding: 1rem;
-  border-radius: 50%;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 0.5rem;
-  display: inline-flex;
+.auth-logo {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1D2125;
+  margin-bottom: 0.25rem;
 }
 
 .brand-name {
-  font-size: 1.75rem;
-  letter-spacing: -0.025em;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0em;
   margin: 0;
+  color: var(--text-heading);
 }
 
 .brand-subtitle {
@@ -36,8 +54,13 @@
   margin: 0;
 }
 
+/* ── Card ────────────────────────────────────────────────────────────────── */
 .login-card {
-  padding: 2.5rem 2rem;
+  padding: 2rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .login-form {
@@ -46,30 +69,44 @@
   gap: 1.25rem;
 }
 
+/* ── Error / Success ─────────────────────────────────────────────────────── */
 .error-message {
-  background-color: #FEF2F2;
-  color: #B91C1C;
+  background: rgba(248,113,113,0.1);
+  color: #FCA5A5;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid #FCA5A5;
+  border: 1px solid rgba(248,113,113,0.3);
 }
 
 .success-message {
-  background-color: #ECFDF5;
-  color: #047857;
+  background: rgba(52,211,153,0.1);
+  color: #6EE7B7;
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   font-weight: 500;
-  border: 1px solid #6EE7B7;
+  border: 1px solid rgba(52,211,153,0.3);
+}
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .label-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.input-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .forgot-link {
@@ -79,37 +116,68 @@
   font-weight: 500;
 }
 
-.forgot-link:hover {
-  text-decoration: underline;
+.forgot-link:hover { text-decoration: underline; }
+
+.input-field {
+  background: var(--color-surface-2);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-fast);
 }
 
+.input-field:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+}
+
+/* ── Login button ────────────────────────────────────────────────────────── */
 .login-btn {
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 0.75rem;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  justify-content: center;
+  background: var(--accent-blue);
+  color: #1D2125;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s ease;
 }
 
+.login-btn:hover {
+  opacity: 0.9;
+}
+
+.login-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────────────── */
 .login-footer {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   text-align: center;
-  border-top: 1px solid var(--border-light);
-  padding-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-border);
 }
 
 .footer-text {
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
 }
 
 .register-link {
-  color: var(--color-navy);
+  color: var(--accent-blue);
   font-weight: 600;
   text-decoration: none;
 }
 
-.register-link:hover {
-  text-decoration: underline;
-}
+.register-link:hover { text-decoration: underline; }

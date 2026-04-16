@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { LoadingProvider } from './context/LoadingContext';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -9,6 +10,7 @@ import ProjectDetails from './pages/ProjectDetails';
 import JoinProject from './pages/JoinProject';
 import ProjectsPage from './pages/Projects';
 import TasksPage from './pages/Tasks';
+import StarredPage from './pages/Starred';
 import TeamPage from './pages/Team';
 import SettingsPage from './pages/Settings';
 import './App.css'; 
@@ -54,6 +56,7 @@ function AppRoutes() {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/:projectId" element={<ProjectDetails />} />
         <Route path="/tasks" element={<TasksPage />} />
+        <Route path="/starred" element={<StarredPage />} />
         <Route path="/team" element={<TeamPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Route>
@@ -68,7 +71,9 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <AppRoutes />
+        <LoadingProvider>
+          <AppRoutes />
+        </LoadingProvider>
       </BrowserRouter>
     </AuthProvider>
   );

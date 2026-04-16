@@ -1,0 +1,537 @@
+/* ── Split Layout for Sidebar Chat ─────────────────────────────────────────── */
+.pd-split-layout {
+  display: flex;
+  height: calc(100vh - 56px); /* minus header */
+  overflow: hidden;
+  background-color: var(--color-bg);
+}
+
+.pd-main-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-width: 0;
+}
+
+.pd-chat-pane {
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.pd-chat-header {
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 600;
+  color: var(--text-heading);
+  font-size: 0.875rem;
+}
+
+.pd-chat-container {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  /* overriding some chat component internals for fit */
+}
+.pd-chat-container .chat-panel {
+  border: none;
+  border-radius: 0;
+  height: 100%;
+}
+
+/* ── Project Header (Jira Style) ─────────────────────────────────────────── */
+.pd-header {
+  padding: 1.5rem 2.5rem 0;
+  flex-shrink: 0;
+}
+
+.pd-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.pd-bc-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+.pd-bc-link:hover { text-decoration: underline; }
+.pd-bc-sep { color: var(--text-tertiary); margin: 0 0.1rem; }
+.pd-bc-current { color: var(--text-primary); }
+
+.pd-header-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.pd-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pd-project-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--accent-blue);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1D2125; /* dark icon */
+  flex-shrink: 0;
+}
+
+.pd-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text-heading);
+}
+
+.pd-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.06);
+  border-radius: 3px;
+  padding: 0.2rem 0.5rem;
+}
+
+.pd-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.pd-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.pd-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* ── Header action buttons ───────────────────────────────────────────────── */
+.pd-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Tab Nav (Jira Style) ────────────────────────────────────────────────── */
+.pd-tabs {
+  display: flex;
+  gap: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08); /* Jira uses a bottom border on the tab container */
+  margin-bottom: 1rem;
+}
+
+.pd-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0;
+  background: none;
+  border: none;
+  margin-bottom: -2px; /* overlap border */
+  border-bottom: 2px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pd-tab:hover { color: var(--text-primary); }
+
+.pd-tab.active {
+  color: var(--accent-blue);
+  border-bottom-color: var(--accent-blue);
+}
+
+.pd-tab-count {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  font-size: 0.7rem;
+  padding: 0.1rem 0.4rem;
+  color: var(--text-primary);
+}
+.pd-tab.active .pd-tab-count {
+  background: rgba(87,157,255,0.2);
+  color: var(--accent-blue);
+}
+
+/* ── Body ────────────────────────────────────────────────────────────────── */
+.pd-body {
+  padding: 0 2.5rem 2rem;
+  flex: 1;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+.pd-card {
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+}
+
+.pd-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pd-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-heading);
+  margin: 0;
+}
+
+.pd-card-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0 0 0.5rem;
+}
+
+.pd-card-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 1.5rem 0;
+}
+
+.pd-card-link {
+  font-size: 0.8rem;
+  color: var(--accent-blue);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0;
+  font-weight: 500;
+}
+.pd-card-link:hover { text-decoration: underline; }
+
+/* ── Overview Layout ─────────────────────────────────────────────────────── */
+.pd-overview-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.pd-overview-main, .pd-overview-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pd-detail-rows {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.pd-detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pd-detail-label {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.pd-detail-value {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.pd-empty {
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+/* ── Task List ───────────────────────────────────────────────────────────── */
+.pd-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pd-task-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  transition: background var(--transition-fast);
+}
+
+.pd-task-row:hover {
+  background: var(--color-surface-3);
+}
+
+.pd-task-title {
+  flex: 1;
+  color: var(--text-primary);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pd-task-priority {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255,255,255,0.04);
+  border-radius: 99px;
+}
+
+/* ── Members Mini ────────────────────────────────────────────────────────── */
+.pd-members-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.pd-member-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pd-member-role {
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.15rem;
+}
+
+/* ── Subprojects Row ─────────────────────────────────────────────────────── */
+.pd-sub-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+  text-decoration: none;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  transition: background var(--transition-fast);
+}
+
+.pd-sub-row:hover { background: var(--color-surface-3); }
+
+/* ...rest omitted, keeping Kanban core structure... */
+
+/* ── Kanban (Jira Board Style) ───────────────────────────────────────────── */
+.pd-tasks-wrap {
+  padding: 0;
+  background: transparent; /* No card wrapper for board */
+  border: none;
+}
+.pd-tasks-wrap .pd-card-head {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.pd-kanban {
+  display: flex;
+  gap: 0.75rem;
+  align-items: start;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.pd-kanban-col {
+  background: var(--color-surface-2); /* The dark grey of column */
+  border-radius: var(--radius-md);
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.pd-kanban-col-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.pd-kanban-count {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 99px;
+  padding: 0.1rem 0.4rem;
+  font-size: 0.65rem;
+}
+
+.pd-kanban-card {
+  background: var(--color-surface); /* Slightly lighter than column bg */
+  border-radius: 4px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  transition: background-color var(--transition-fast);
+}
+
+.pd-kanban-card:hover {
+  background: var(--color-surface-3); /* Hover color */
+}
+
+.pd-kanban-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pd-kanban-task-title {
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.pd-kanban-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 0.5rem;
+}
+
+/* Sub-card generic styles to match Jira */
+.pd-sub-card {
+  background: var(--color-surface-2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+.pd-sub-card:hover {
+  background: var(--color-surface-3);
+}
+.pd-sub-card-icon {
+  width: 24px;
+  height: 24px;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.pd-sub-card-name { font-size: 0.875rem; font-weight: 500; }
+.pd-sub-card-meta { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem; }
+
+/* Inline select inputs for board */
+.pd-kanban-actions {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+.pd-inline-select {
+  background: rgba(255,255,255,0.05);
+  border: none;
+  border-radius: 3px;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  padding: 0.2rem;
+}
+.pd-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+}
+.pd-delete-btn:hover { color: var(--accent-red); }
+
+/* Members Table Grid */
+.pd-member-table-head, .pd-member-table-row {
+  display: grid;
+  grid-template-columns: 1fr 140px 140px;
+  gap: 1rem;
+  align-items: center;
+}
+.pd-member-table-head {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-bottom: 2px solid rgba(255,255,255,0.05);
+  padding: 1rem 0 0.5rem;
+}
+.pd-member-table-row {
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.pd-member-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.pd-avatar {
+  background: var(--accent-blue);
+  color: #1D2125;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+.pd-member-name { font-size: 0.9rem; font-weight: 500; }
+.pd-member-email { font-size: 0.75rem; color: var(--text-secondary); }

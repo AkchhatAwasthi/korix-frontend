@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Sparkles, LayoutDashboard, FolderKanban, CheckSquare, Users, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, CheckSquare, Users, Settings, LogOut, Grid, Star, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
 
@@ -12,64 +12,60 @@ export default function Sidebar() {
     navigate('/login');
   };
 
-  const navItems = [
-    { label: 'Overview', icon: <LayoutDashboard size={20} />, path: '/dashboard' },
-    { label: 'Projects', icon: <FolderKanban size={20} />, path: '/projects' },
-    { label: 'Tasks', icon: <CheckSquare size={20} />, path: '/tasks' },
-    { label: 'Team', icon: <Users size={20} />, path: '/team' },
-  ];
-
   return (
-    <aside className="sidebar">
-      <div className="sidebar-header">
-        <Sparkles size={24} className="brand-icon" />
-        <span className="brand-text">Korix</span>
-      </div>
-
-      <div className="workspace-selector">
-        <div className="workspace-info">
-          <span className="workspace-label">Current Workspace</span>
-          <span className="workspace-name">My Workspace</span>
+    <aside className="jira-sidebar">
+      <div className="jira-sidebar-header">
+        <div className="jira-logo">
+          <Grid size={16} strokeWidth={2.5} color="var(--accent-blue)" style={{ marginRight: 8 }} />
+          <span className="jira-logo-text">Korix</span>
         </div>
       </div>
 
-      <nav className="sidebar-nav">
-        <ul className="nav-list">
-          {navItems.map((item, idx) => (
-            <li key={idx} className="nav-item">
-              <NavLink 
-                to={item.path} 
-                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-              >
-                {item.icon}
-                <span>{item.label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+      <nav className="jira-sidebar-nav">
+        <div className="jira-nav-group">
+          <NavLink to="/dashboard" className={({ isActive }) => `jira-nav-link ${isActive ? 'active' : ''}`}>
+            <LayoutDashboard size={18} />
+            <span>Dashboards</span>
+          </NavLink>
+        </div>
 
-        <div className="nav-separator"></div>
+        <div className="jira-nav-section">
+          <span className="jira-nav-section-label">Projects <Plus size={14} className="jira-nav-action" /></span>
+          <NavLink to="/projects" className={({ isActive }) => `jira-nav-link sub-link ${isActive ? 'active' : ''}`}>
+             <span className="jira-proj-avatar">K</span>
+             <span>All Projects</span>
+          </NavLink>
+        </div>
 
-        <ul className="nav-list">
-          <li className="nav-item">
-            <NavLink to="/settings" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-              <Settings size={20} />
-              <span>Settings</span>
-            </NavLink>
-          </li>
-        </ul>
+        <div className="jira-nav-section">
+          <span className="jira-nav-section-label">Your Work</span>
+          <NavLink to="/tasks" className={({ isActive }) => `jira-nav-link sub-link ${isActive ? 'active' : ''}`}>
+             <CheckSquare size={16} />
+             <span>Tasks</span>
+          </NavLink>
+          <NavLink to="/starred" className={({ isActive }) => `jira-nav-link sub-link ${isActive ? 'active' : ''}`}>
+             <Star size={16} />
+             <span>Starred</span>
+          </NavLink>
+        </div>
+
+        <div className="jira-nav-section">
+          <span className="jira-nav-section-label">Teams</span>
+          <NavLink to="/team" className={({ isActive }) => `jira-nav-link sub-link ${isActive ? 'active' : ''}`}>
+             <Users size={16} />
+             <span>Directory</span>
+          </NavLink>
+        </div>
       </nav>
 
-      <div className="sidebar-footer">
-        <div className="user-profile">
-          <div className="avatar">{user?.name?.charAt(0).toUpperCase() || 'U'}</div>
-          <div className="user-info">
-            <span className="user-name">{user?.name || 'User'}</span>
-            <span className="user-role">{user?.email}</span>
-          </div>
-        </div>
-        <button className="logout-btn" title="Sign Out" onClick={handleLogout}>
+      <div className="jira-sidebar-footer">
+        <NavLink to="/settings" className={({ isActive }) => `jira-nav-link ${isActive ? 'active' : ''}`}>
+          <Settings size={18} />
+          <span>Settings</span>
+        </NavLink>
+        <button className="jira-nav-link logout-btn" onClick={handleLogout}>
           <LogOut size={18} />
+          <span>Log Out</span>
         </button>
       </div>
     </aside>

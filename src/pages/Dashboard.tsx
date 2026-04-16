@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { Briefcase, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Briefcase, CheckCircle, Clock, AlertTriangle, ArrowRight } from 'lucide-react';
 import { projectsService } from '../api/projects';
 import { authService } from '../api/auth';
 import { useAuth } from '../context/AuthContext';
@@ -16,41 +16,39 @@ export default function Dashboard() {
   const [resendStatus, setResendStatus] = useState('');
 
   useEffect(() => {
-    // If there is a pending invite in local storage, route them to accept it first
     if (localStorage.getItem('pending_invite_token')) {
       window.location.href = '/projects/join';
       return;
     }
-
-    const fetchProjects = async () => {
+    const fetch = async () => {
       try {
         const data = await projectsService.getProjects();
         setProjects(data.projects || []);
-      } catch (error) {
-        console.error('Failed to load projects', error);
+      } catch (e) {
+        console.error(e);
       } finally {
         setLoading(false);
       }
     };
-    fetchProjects();
+    fetch();
   }, []);
 
   const handleResend = async () => {
     setResending(true);
     try {
       await authService.resendVerification();
-      setResendStatus('Verification email sent!');
-    } catch (error: any) {
-      setResendStatus(error.response?.data?.message || 'Failed to resend');
+      setResendStatus('Email sent!');
+    } catch (e: any) {
+      setResendStatus(e.response?.data?.message || 'Failed');
     } finally {
       setResending(false);
     }
   };
 
   const stats = [
-    { title: 'Active Projects', value: projects.length.toString(), icon: <Briefcase size={20} color="var(--accent-blue)" />, trend: 'All time' },
-    { title: 'Tasks Completed', value: '0', icon: <CheckCircle size={20} color="#10B981" />, trend: 'Feature coming soon' },
-    { title: 'Hours Tracked', value: '0h', icon: <Clock size={20} color="#F59E0B" />, trend: 'Feature coming soon' },
+    { title: 'Active Projects', value: String(projects.length), icon: <Briefcase size={18} color="#A5B4FC" />, trend: 'All time' },
+    { title: 'Tasks Completed', value: '0', icon: <CheckCircle size={18} color="var(--accent-green)" />, trend: 'Coming soon' },
+    { title: 'Hours Tracked', value: '0h', icon: <Clock size={18} color="var(--accent-amber)" />, trend: 'Coming soon' },
   ];
 
   return (
@@ -58,29 +56,33 @@ export default function Dashboard() {
       <Sidebar />
       <div className="main-content">
         <Header />
-        
-        {!user?.isVerified && (
-          <div style={{ backgroundColor: '#FEF3C7', padding: '1rem 2rem', borderBottom: '1px solid #F59E0B', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#92400E' }}>
-              <AlertTriangle size={20} />
-              <span><strong>Your email is not verified!</strong> Please check your inbox or spam folder.</span>
-            </div>
-            <button 
-              className="btn btn-outline btn-sm" 
-              onClick={handleResend} 
-              disabled={resending}
-              style={{ borderColor: '#D97706', color: '#B45309' }}
-            >
-              {resending ? 'Sending...' : resendStatus || 'Resend Email'}
-            </button>
-          </div>
-        )}
 
         <div className="page-container dashboard-container">
-          {/* Stats Row */}
+          <div className="pd-header-main" style={{ marginBottom: '1.5rem' }}>
+            <h1 className="pd-title" style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>
+              Good to see you, {user?.name?.split(' ')[0] || 'there'} 👋
+            </h1>
+            <p className="pd-description" style={{ fontSize: '0.9rem' }}>
+              Here's what's happening across your workspace today.
+            </p>
+          </div>
+
+          {!user?.isVerified && (
+            <div className="verify-banner" style={{ background: 'rgba(226,178,3,0.1)', border: '1px solid rgba(226,178,3,0.2)', padding: '0.75rem 1rem', borderRadius: '4px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <div className="verify-banner-text" style={{ color: 'var(--accent-amber)', display: 'flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.875rem' }}>
+                <AlertTriangle size={16} />
+                <span><strong>Email not verified.</strong> Check your inbox or spam folder.</span>
+              </div>
+              <button className="btn btn-sm btn-outline" onClick={handleResend} disabled={resending}
+                style={{ borderColor: 'rgba(226,178,3,0.4)', color: 'var(--accent-amber)' }}>
+                {resending ? 'Sending…' : resendStatus || 'Resend'}
+              </button>
+            </div>
+          )}
+          {/* Stats */}
           <section className="stats-grid">
-            {stats.map((stat, idx) => (
-              <div key={idx} className="card stat-card">
+            {stats.map((stat, i) => (
+              <div key={i} className="card stat-card">
                 <div className="stat-header">
                   <span className="stat-title">{stat.title}</span>
                   <div className="stat-icon-wrapper">{stat.icon}</div>
@@ -93,56 +95,66 @@ export default function Dashboard() {
             ))}
           </section>
 
-          {/* Main Dashboard Content */}
+          {/* Main grid */}
           <div className="dashboard-grid">
-            {/* Recent Projects */}
+            {/* Projects */}
             <section className="card section-card">
               <div className="section-header">
                 <h3 className="section-title">Your Projects</h3>
-                <button className="btn btn-outline btn-sm">View All</button>
+                <Link to="/projects" className="btn btn-sm btn-outline">View all</Link>
               </div>
               <div className="projects-list">
                 {loading ? (
-                  <p>Loading projects...</p>
+                  <div className="empty-state">Loading projects…</div>
                 ) : projects.length === 0 ? (
-                  <p>No projects yet. Create one!</p>
+                  <div className="empty-state">No projects yet. Hit <strong>New Project</strong> to create one.</div>
                 ) : (
-                  projects.map((project, idx) => (
-                    <div key={idx} className="project-item">
+                  projects.slice(0, 6).map((project) => (
+                    <div key={project.id} className="project-item">
                       <div className="project-info">
+                        <div className="project-dot">{project.name.charAt(0).toUpperCase()}</div>
                         <h4 className="project-name">
-                          <Link to={`/projects/${project.id}`} style={{ textDecoration: 'none', color: 'var(--color-navy)' }}>
+                          <Link to={`/projects/${project.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                             {project.name}
                           </Link>
                         </h4>
-                        <span className="status-badge status-in-progress">
-                          Active
-                        </span>
                       </div>
-                      <div className="project-meta">
-                        <span className="meta-text">{project.description || 'No description'}</span>
-                        <span className="meta-text">{new Date(project.createdAt).toLocaleDateString()}</span>
-                      </div>
+                      <span className="meta-text" style={{ flexShrink: 0, fontSize: '0.75rem' }}>
+                        {new Date(project.createdAt).toLocaleDateString()}
+                      </span>
                     </div>
                   ))
                 )}
               </div>
             </section>
 
-            {/* Quick Actions / Activity */}
+            {/* Activity */}
             <section className="card section-card">
               <div className="section-header">
                 <h3 className="section-title">Recent Activity</h3>
               </div>
               <div className="activity-feed">
                 <div className="activity-item">
-                  <div className="activity-dot"></div>
+                  <div className="activity-dot" />
                   <div className="activity-content">
-                    <p>Welcome to <strong>Korix</strong>!</p>
+                    <p>Welcome to <strong style={{ color: 'var(--text-primary)' }}>Korix</strong>!</p>
                     <span className="activity-time">Just now</span>
                   </div>
                 </div>
+                {projects.slice(0, 3).map((p) => (
+                  <div key={p.id} className="activity-item">
+                    <div className="activity-dot" style={{ background: 'var(--accent-green)', boxShadow: '0 0 8px rgba(52,211,153,0.5)' }} />
+                    <div className="activity-content">
+                      <p>Project <strong style={{ color: 'var(--text-primary)' }}>{p.name}</strong> created</p>
+                      <span className="activity-time">{new Date(p.createdAt).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
+
+              <Link to="/projects" className="btn btn-ghost btn-sm" style={{ marginTop: '1rem', width: '100%', justifyContent: 'center' }}>
+                Go to Projects <ArrowRight size={14} />
+              </Link>
             </section>
           </div>
         </div>

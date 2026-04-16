@@ -1,7 +1,6 @@
 import { io } from 'socket.io-client';
 
-// Base URL without /api — socket connects to the root server, not a REST endpoint
-const SOCKET_URL = 'https://korix-backend.onrender.com';
+const SOCKET_URL = 'http://localhost:8000';
 
 // autoConnect: false — we connect manually when the ChatPanel mounts
 // auth is a function so it reads the latest token from localStorage at connect time

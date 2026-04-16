@@ -1,4 +1,5 @@
 import type { Message } from '../../api/chat';
+import { CheckCheck } from 'lucide-react';
 
 interface Props {
   message: Message;
@@ -19,7 +20,10 @@ export default function MessageBubble({ message, currentUserId }: Props) {
       {!isOwn && <span className="bubble-sender">{senderName}</span>}
       <div className={`message-bubble ${isOwn ? 'bubble-own' : 'bubble-other'}`}>
         <p className="bubble-content">{message.content}</p>
-        <span className="bubble-time">{time}</span>
+        <span className="bubble-time" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+          {time}
+          {isOwn && <CheckCheck size={12} color="#4BCE97" />}
+        </span>
       </div>
     </div>
   );
