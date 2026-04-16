@@ -1,10 +1,10 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FolderKanban, CheckSquare, Users, Settings, LogOut, Grid, Star, Plus } from 'lucide-react';
+import { LayoutDashboard, CheckSquare, Users, Settings, LogOut, Grid, Star, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import './Sidebar.css';
 
 export default function Sidebar() {
-  const { user, logoutState } = useAuth();
+  const { logoutState } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { usePageLoading } from '../context/LoadingContext';
 import { authService } from '../api/auth';

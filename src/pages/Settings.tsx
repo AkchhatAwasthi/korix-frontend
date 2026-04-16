@@ -17,7 +17,7 @@ export default function SettingsPage() {
     <div className="app-layout">
       <Sidebar />
       <div className="main-content">
-        <Header title="Settings" subtitle="Your account and workspace configuration." />
+        <Header />
 
         <div className="page-container dashboard-container">
           <section className="card section-card" style={{ maxWidth: 600 }}>

@@ -61,7 +61,7 @@ export default function TeamPage() {
     <div className="app-layout">
       <Sidebar />
       <div className="main-content">
-        <Header title="Team" subtitle="Everyone contributing across your workspace." />
+        <Header />
 
         <div className="page-container dashboard-container">
           <section className="card section-card">

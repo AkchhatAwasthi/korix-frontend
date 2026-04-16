@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { Sparkles, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
 import { usePageLoading } from '../context/LoadingContext';
 import { useAuth } from '../context/AuthContext';
 import { authService } from '../api/auth';
-import './Login.css'; // Re-use the flawless login styles
+import './Login.css';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -12,7 +12,6 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
@@ -30,16 +29,15 @@ export default function RegisterPage() {
     setLoading(true);
     start();
     setError('');
-    
+
     try {
       const res = await authService.register({ name, email, password });
-      
-      // Auto-login logic
+
+      // Auto-login: store token and update auth context then go straight to dashboard
       localStorage.setItem('access_token', res.accessToken);
       loginState(res.user);
-      
       navigate('/dashboard');
-      
+
     } catch (err: any) {
       setError(err.response?.data?.message || err.message || 'An error occurred during registration.');
     } finally {
@@ -60,15 +58,14 @@ export default function RegisterPage() {
         <div className="card login-card">
           <form onSubmit={handleRegister} className="login-form">
             {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
 
             <div className="input-group">
               <label htmlFor="name" className="input-label">Full Name</label>
-              <input 
-                id="name" 
-                type="text" 
-                className="input-field" 
-                placeholder="Ada Lovelace" 
+              <input
+                id="name"
+                type="text"
+                className="input-field"
+                placeholder="Ada Lovelace"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -77,26 +74,26 @@ export default function RegisterPage() {
 
             <div className="input-group">
               <label htmlFor="email" className="input-label">Email Address</label>
-              <input 
-                id="email" 
-                type="email" 
-                className="input-field" 
-                placeholder="you@company.com" 
+              <input
+                id="email"
+                type="email"
+                className="input-field"
+                placeholder="you@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
             </div>
-            
+
             <div className="input-group">
               <div className="label-wrapper">
                 <label htmlFor="password" className="input-label">Password</label>
               </div>
-              <input 
-                id="password" 
-                type="password" 
-                className="input-field" 
-                placeholder="••••••••" 
+              <input
+                id="password"
+                type="password"
+                className="input-field"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -108,7 +105,7 @@ export default function RegisterPage() {
               {!loading && <UserPlus size={16} />}
             </button>
           </form>
-          
+
           <div className="login-footer">
             <p className="footer-text">
               Already have an account? <Link to="/login" className="register-link">Sign In</Link>
