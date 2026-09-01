@@ -86,8 +86,9 @@ export default function JoinProject() {
           {status === 'unauth' && (
             <>
               <h3 style={{ marginBottom: '1rem' }}>Almost there!</h3>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-                You've been invited to a project, but you need to log in or register an account first.
+              <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                You've been invited to join a project. Your invite link has been saved — log in or
+                create an account and you'll be added to the project automatically.
               </p>
               <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
                 <Link to="/login" className="btn btn-accent">Login</Link>

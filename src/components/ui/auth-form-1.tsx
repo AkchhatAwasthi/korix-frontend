@@ -251,7 +251,9 @@ function AuthSignIn({ onForgotPassword, onSignUp }: AuthSignInProps) {
     try {
       const response = await authService.login({ email: data.email, password: data.password });
       loginState(response.user, response.accessToken, response.refreshToken);
-      navigate("/dashboard");
+      // If there's a pending invite, go complete it; otherwise go to dashboard
+      const pendingInvite = localStorage.getItem('pending_invite_token');
+      navigate(pendingInvite ? '/projects/join' : '/dashboard');
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } }; message?: string };
       setFormState((prev) => ({ ...prev, error: error.response?.data?.message || error.message || "Invalid email or password" }));
@@ -383,12 +385,27 @@ function AuthSignUp({ onSignIn }: AuthSignUpProps) {
   const onSubmit = async (data: SignUpFormValues) => {
     setFormState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
-      await authService.register({ name: data.name, email: data.email, password: data.password });
-      // Usually register might auto-login or require email verification.
-      // Assuming auto-login for seamless UX if it returns tokens, or we just log them in immediately using the credentials.
-      const response = await authService.login({ email: data.email, password: data.password });
-      loginState(response.user, response.accessToken, response.refreshToken);
-      navigate("/dashboard");
+      const registerResponse = await authService.register({ name: data.name, email: data.email, password: data.password });
+
+      // If the register endpoint already returns tokens (no email verification), use them directly
+      if (registerResponse?.accessToken && registerResponse?.refreshToken) {
+        loginState(registerResponse.user, registerResponse.accessToken, registerResponse.refreshToken);
+        const pendingInvite = localStorage.getItem('pending_invite_token');
+        navigate(pendingInvite ? '/projects/join' : '/dashboard');
+        return;
+      }
+
+      // Otherwise try a normal login with the just-created credentials
+      try {
+        const response = await authService.login({ email: data.email, password: data.password });
+        loginState(response.user, response.accessToken, response.refreshToken);
+        const pendingInvite = localStorage.getItem('pending_invite_token');
+        navigate(pendingInvite ? '/projects/join' : '/dashboard');
+      } catch (loginErr: unknown) {
+        // Login failed — likely because email verification is required.
+        // Redirect to verify-email notice without showing an error.
+        navigate('/verify-email');
+      }
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } }; message?: string };
       setFormState((prev) => ({ ...prev, error: error.response?.data?.message || error.message || "An unexpected error occurred" }));
